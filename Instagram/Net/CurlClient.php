@@ -1,10 +1,10 @@
 <?php
 
 /**
-* Instagram PHP
-* @author Galen Grover <galenjr@gmail.com>
-* @license http://opensource.org/licenses/mit-license.php The MIT License
-*/
+ * Instagram PHP
+ * @author Galen Grover <galenjr@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php The MIT License
+ */
 
 namespace Instagram\Net;
 
@@ -21,13 +21,19 @@ class CurlClient implements ClientInterface {
      * @var curl resource
      */
     protected $curl = null;
-
+    protected $config = null;
+    protected $client_secret = null;
     /**
      * Constructor
      *
      * Initializes the curl object
      */
     function __construct(){
+        $this->initializeCurl();
+    }
+
+    public function setClientSecret($client_secret){
+        $this->client_secret = $client_secret;
         $this->initializeCurl();
     }
 
@@ -68,7 +74,7 @@ class CurlClient implements ClientInterface {
      * @return \Instagram\Net\Response
      * @access public
      */
-    public function put( $url, array $data = null  ){
+    public function put( $url, array $data = null ){
         curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'PUT' );
     }
 
@@ -80,7 +86,7 @@ class CurlClient implements ClientInterface {
      * @return \Instagram\Net\Response
      * @access public
      */
-    public function delete( $url, array $data = null  ){
+    public function delete( $url, array $data = null ){
         curl_setopt( $this->curl, CURLOPT_URL, sprintf( "%s?%s", $url, http_build_query( $data ) ) );
         curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
         return $this->fetch();
@@ -95,6 +101,16 @@ class CurlClient implements ClientInterface {
      */
     protected function initializeCurl() {
         $this->curl = curl_init();
+        if(isset($this->client_secret)) {
+            $ips = $_SERVER['REMOTE_ADDR'];
+            $secret = $this->client_secret;
+            $signature = (hash_hmac('sha256', $ips, $secret, false));
+            $header = join('|', array($ips, $signature));
+
+            curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array(
+                    'X-Insta-Forwarded-For: ' . $header
+                ));
+        }
         curl_setopt( $this->curl, CURLOPT_RETURNTRANSFER, true );
         curl_setopt( $this->curl, CURLOPT_SSL_VERIFYPEER, false );
     }
@@ -114,7 +130,8 @@ class CurlClient implements ClientInterface {
         if ( $error ) {
             throw new \Instagram\Core\ApiException( $error, 666, 'CurlError' );
         }
+        var_dump($raw_response);
         return $raw_response;
     }
-    
+
 }

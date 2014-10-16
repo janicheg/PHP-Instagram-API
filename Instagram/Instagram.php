@@ -1,10 +1,10 @@
 <?php
 
 /**
-* Instagram PHP
-* @author Galen Grover <galenjr@gmail.com>
-* @license http://opensource.org/licenses/mit-license.php The MIT License
-*/
+ * Instagram PHP
+ * @author Galen Grover <galenjr@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php The MIT License
+ */
 
 namespace Instagram;
 
@@ -36,15 +36,15 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
      * @param \Instagram\Net\ClientInterface $client Client object used to connect to the API
      * @access public
      */
-    public function __construct( $access_token = null, \Instagram\Net\ClientInterface $client = null ) {
-        $this->proxy = new \Instagram\Core\Proxy( $client ?: new \Instagram\Net\CurlClient, $access_token ?: null );
+    public function __construct( $access_token = null, \Instagram\Net\ClientInterface $client = null, $client_secret = null ) {
+        $this->proxy = new \Instagram\Core\Proxy( $client ?: new \Instagram\Net\CurlClient, $access_token ?: null, $client_secret );
     }
 
     /**
      * Set the access token
      *
      * Most API calls require an access ID
-     * 
+     *
      * @param string $access_token
      * @access public
      */
@@ -56,12 +56,24 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
      * Set the client ID
      *
      * Some API calls can be called with only a Client ID
-     * 
+     *
      * @param string $client_id Client ID
      * @access public
      */
     public function setClientID( $client_id ) {
         $this->proxy->setClientId( $client_id );
+    }
+
+    /**
+     * Set the client secret key
+     *
+     * Some API calls can be called with only a header "X-Insta-Forwarded-For"
+     *
+     * @param string $client_secret Client Secret
+     * @access public
+     */
+    public function setClientSecret( $client_secret ) {
+        $this->proxy->setClientSecret( $client_secret );
     }
 
     /**
