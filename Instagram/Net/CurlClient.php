@@ -130,7 +130,6 @@ class CurlClient implements ClientInterface {
         if ( $error ) {
             throw new \Instagram\Core\ApiException( $error, 666, 'CurlError' );
         }
-        var_dump($raw_response);
         return $raw_response;
     }
 
