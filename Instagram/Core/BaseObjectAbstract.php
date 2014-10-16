@@ -1,10 +1,10 @@
 <?php
 
 /**
-* Instagram PHP
-* @author Galen Grover <galenjr@gmail.com>
-* @license http://opensource.org/licenses/mit-license.php The MIT License
-*/
+ * Instagram PHP
+ * @author Galen Grover <galenjr@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php The MIT License
+ */
 
 namespace Instagram\Core;
 
@@ -13,11 +13,11 @@ namespace Instagram\Core;
  *
  * Provides core functionality
  */
-abstract class BaseObjectAbstract {
+abstract class BaseObjectAbstract implements \JsonSerializable {
 
     /**
      * Object data
-     * 
+     *
      * @var StdClass
      * @access protected
      */
@@ -25,7 +25,7 @@ abstract class BaseObjectAbstract {
 
     /**
      * Proxy object that does all the API heavy lifting
-     * 
+     *
      * @var \Instagram\Core\Proxy
      * @access protected
      */
@@ -34,7 +34,7 @@ abstract class BaseObjectAbstract {
     /**
      * Get the ID returned from the API
      *
-     * @return string 
+     * @return string
      * @access public
      */
     public function getId() {
@@ -47,7 +47,7 @@ abstract class BaseObjectAbstract {
      * Some API objects don't have IDs (tags, some locations )
      * Those objects define their own getId() methods to return a psuedo ID
      * Tags = tag name, ID-less locations return null
-     * 
+     *
      * @return string Returns the ID
      * @access public
      */
@@ -57,7 +57,7 @@ abstract class BaseObjectAbstract {
 
     /**
      * Constructor
-     * 
+     *
      * @param StdClass $data Object's data
      * @param \Instagram\Core\Proxy $proxy Object's proxy
      * @access public
@@ -69,7 +69,7 @@ abstract class BaseObjectAbstract {
 
     /**
      * Set the object's data
-     * 
+     *
      * @param StdClass $data Object data
      * @access public
      */
@@ -79,7 +79,7 @@ abstract class BaseObjectAbstract {
 
     /**
      * Get the object's data
-     * 
+     *
      * @return Stdclass Returns the object's data
      * @access public
      */
@@ -91,7 +91,7 @@ abstract class BaseObjectAbstract {
      * Magic method to get data
      *
      * This may be removed in future versions
-     * 
+     *
      * @param string $var Variable ot get from the data
      * @return mixed Returns the variable or null
      * @access public
@@ -102,12 +102,16 @@ abstract class BaseObjectAbstract {
 
     /**
      * Set the object's proxy
-     * 
+     *
      * @param \Instagram\Core\Proxy $proxy Proxy object
      * @access public
      */
     public function setProxy( \Instagram\Core\Proxy $proxy ) {
         $this->proxy = $proxy;
+    }
+
+    public function jsonSerialize() {
+        return $this->getData();
     }
 
 }
