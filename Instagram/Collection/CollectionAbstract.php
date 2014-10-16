@@ -1,10 +1,10 @@
 <?php
 
 /**
-* Instagram PHP
-* @author Galen Grover <galenjr@gmail.com>
-* @license http://opensource.org/licenses/mit-license.php The MIT License
-*/
+ * Instagram PHP
+ * @author Galen Grover <galenjr@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php The MIT License
+ */
 
 namespace Instagram\Collection;
 
@@ -13,7 +13,7 @@ namespace Instagram\Collection;
  *
  * All Collections extend this class
  */
-abstract class CollectionAbstract implements \IteratorAggregate, \ArrayAccess, \Countable {
+abstract class CollectionAbstract implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable {
 
     /**
      * Holds the pagination data for the collection
@@ -152,7 +152,7 @@ abstract class CollectionAbstract implements \IteratorAggregate, \ArrayAccess, \
      *     function( $t ){ return sprintf( '<a href="?example=tag.php&tag=%1$s">#%1$s</a>', $t ); }
      * )
      *
-     * @param Closure $callback Function to run on the collection 
+     * @param Closure $callback Function to run on the collection
      * @param string $sep Implode separator
      * @access public
      */
@@ -198,11 +198,15 @@ abstract class CollectionAbstract implements \IteratorAggregate, \ArrayAccess, \
 
     /**
      * Countable
-     * 
+     *
      * {@link http://us2.php.net/manual/en/class.countable.php}
      */
     public function count() {
         return count( $this->data );
+    }
+
+    public function jsonSerialize() {
+        return $this->getData();
     }
 
 }
