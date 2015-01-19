@@ -46,6 +46,10 @@ class CurlClient implements ClientInterface {
      * @access public
      */
     public function get( $url, array $data = null ){
+	$data['count']="6";
+        if($url == "https://api.instagram.com/v1/users/self/media/liked"){
+            $data['count']="10";
+        }
         curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'GET' );
         curl_setopt( $this->curl, CURLOPT_URL, sprintf( "%s?%s", $url, http_build_query( $data ) ) );
         return $this->fetch();
