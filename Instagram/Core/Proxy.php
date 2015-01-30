@@ -555,7 +555,7 @@ class Proxy {
         $raw_response = $this->client->$method(
             $url,
             array(
-                'access_token'  => $this->access_token,
+                'access_token'  => isset( $params['access_token'] ) ? $params['access_token'] : $this->access_token,
                 'client_id'     => isset( $params['client_id'] ) ? $params['client_id'] : $this->client_id
             ) + (array) $params,
             isset( $params['client_secret'] ) ? $params['client_secret'] : $this->client_secret
