@@ -46,8 +46,8 @@ class CurlClient implements ClientInterface {
      * @access public
      */
     public function get( $url, array $data = null ){
-	if(!strpos($url,'follow')) {
-            $data['count']="18";
+        if(!strpos($url,'follow')) and !isset($data['count'])) {
+            $data['count'] = "18";
         }
         curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'GET' );
         curl_setopt( $this->curl, CURLOPT_URL, sprintf( "%s?%s", $url, http_build_query( $data ) ) );
