@@ -7,6 +7,7 @@
  */
 
 namespace Instagram\Net;
+use Instagram\Cache\MemcacheCurl;
 
 /**
  * Curl Client
@@ -111,8 +112,8 @@ class CurlClient implements ClientInterface {
             $header = join('|', array($ips, $signature));
 
             curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array(
-                    'X-Insta-Forwarded-For: ' . $header
-                ));
+                'X-Insta-Forwarded-For: ' . $header
+            ));
         }
         curl_setopt( $this->curl, CURLOPT_RETURNTRANSFER, true );
         curl_setopt( $this->curl, CURLOPT_SSL_VERIFYPEER, false );
@@ -128,11 +129,13 @@ class CurlClient implements ClientInterface {
      * @throws \Instagram\Core\ApiException
      */
     protected function fetch() {
-        $raw_response = curl_exec( $this->curl );
+        $memcache_curl = new MemcacheCurl();
+        $raw_response = $memcache_curl->getResponse($this->curl);
+        /*$raw_response = curl_exec( $this->curl );
         $error = curl_error( $this->curl );
         if ( $error ) {
             throw new \Instagram\Core\ApiException( $error, 666, 'CurlError' );
-        }
+        }*/
         return $raw_response;
     }
 
