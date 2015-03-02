@@ -23,7 +23,7 @@ class MemcacheCurl {
             $ttl = 60*60; // 1 hour
 
             if ($memlink = $memcache->get($key)) {
-                $this->execInBackground(
+                $this->writeBackgroundTasks(
                     "php ".__DIR__."/backroundRefresh.php",
                     ['url' => escapeshellarg($url), 'header' => escapeshellarg($header)]
                 );
@@ -64,7 +64,10 @@ class MemcacheCurl {
         return false;
     }
 
-    private function execInBackground($cmd, $args) {
-        exec($cmd . " " . implode(" " ,$args) . " > /dev/null 2>&1 &");
+    private function writeBackgroundTasks($cmd, $args)
+    {
+        $fp = fopen($_SERVER['DOCUMENT_ROOT'] .'tasks/websta_tasks.txt', 'w+');
+        fwrite($fp, $cmd . " " . implode(" " ,$args) . " > /dev/null 2>&1 &; ");
+        fclose($fp);
     }
 } 
