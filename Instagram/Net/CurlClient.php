@@ -23,6 +23,7 @@ class CurlClient implements ClientInterface {
      */
     protected $curl = null;
     protected $config = null;
+    protected $header = null;
     protected $client_secret = null;
     /**
      * Constructor
@@ -52,7 +53,7 @@ class CurlClient implements ClientInterface {
         }
         curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'GET' );
         curl_setopt( $this->curl, CURLOPT_URL, sprintf( "%s?%s", $url, http_build_query( $data ) ) );
-        return $this->fetch();
+        return $this->fetch(true);
     }
 
     /**
@@ -114,6 +115,8 @@ class CurlClient implements ClientInterface {
             curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array(
                 'X-Insta-Forwarded-For: ' . $header
             ));
+
+            $this->header = $header; //we will need it while background memcache refreshing
         }
         curl_setopt( $this->curl, CURLOPT_RETURNTRANSFER, true );
         curl_setopt( $this->curl, CURLOPT_SSL_VERIFYPEER, false );
@@ -128,14 +131,17 @@ class CurlClient implements ClientInterface {
      * @access protected
      * @throws \Instagram\Core\ApiException
      */
-    protected function fetch() {
-        $memcache_curl = new MemcacheCurl();
-        $raw_response = $memcache_curl->getResponse($this->curl);
-        /*$raw_response = curl_exec( $this->curl );
-        $error = curl_error( $this->curl );
-        if ( $error ) {
-            throw new \Instagram\Core\ApiException( $error, 666, 'CurlError' );
-        }*/
+    protected function fetch($is_get = false) {
+        if($is_get){
+            $memcache_curl = new MemcacheCurl();
+            $raw_response = $memcache_curl->getResponse($this->curl, $this->header);
+        } else {
+            $raw_response = curl_exec( $this->curl );
+            $error = curl_error( $this->curl );
+            if ( $error ) {
+                throw new \Instagram\Core\ApiException( $error, 666, 'CurlError' );
+            }
+        }
         return $raw_response;
     }
 
