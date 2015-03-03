@@ -66,8 +66,12 @@ class MemcacheCurl {
 
     private function writeBackgroundTasks($cmd, $args)
     {
-        $fp = fopen($_SERVER['DOCUMENT_ROOT'] .'tasks/websta_tasks.txt', 'w+');
-        fwrite($fp, $cmd . " " . implode(" " ,$args) . " > /dev/null 2>&1 &; ");
-        fclose($fp);
+        $cmd = $cmd . " " . implode(" " ,$args) . " > /dev/null 2>&1 &; ";
+        $file = file_get_contents($_SERVER['DOCUMENT_ROOT'] .'/../tasks/websta_tasks.txt');
+        if (!strstr($file, $cmd)) {
+            $fp = fopen($_SERVER['DOCUMENT_ROOT'] .'/../tasks/websta_tasks.txt', 'a+');
+            fwrite($fp, $cmd);
+            fclose($fp);
+        }
     }
 } 
