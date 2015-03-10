@@ -66,7 +66,7 @@ class MemcacheCurl {
 
     private function writeBackgroundTasks($cmd, $args)
     {
-        $cmd = $cmd . " " . implode(" " ,$args) . " > /dev/null 2>&1 &; ";
+        $cmd = $cmd . " " . implode(" " ,$args) . " > /dev/null 2>&1 & ";
         $file = file_get_contents($_SERVER['DOCUMENT_ROOT'] .'/../tasks/websta_tasks.txt');
         if (!strstr($file, $cmd)) {
             $fp = fopen($_SERVER['DOCUMENT_ROOT'] .'/../tasks/websta_tasks.txt', 'a+');
