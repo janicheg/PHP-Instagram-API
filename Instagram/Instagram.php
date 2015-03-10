@@ -197,8 +197,8 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
      * @return \Instagram\Collection\MediaCollection
      * @access public
      */
-    public function getPopularMedia() {
-        $popular_media = new MediaCollection( $this->proxy->getPopularMedia(), $this->proxy );
+    public function getPopularMedia($params) {
+        $popular_media = new MediaCollection( $this->proxy->getPopularMedia($params), $this->proxy );
         return $popular_media;
     }
 
