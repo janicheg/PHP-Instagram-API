@@ -49,14 +49,14 @@ class MemcacheCurl {
     private function getMemcache() {
         $usemem = false;
 
-        if (extension_loaded('memcache')) {
+        if (extension_loaded('memcached')) {
             $usemem = true;
         }
         if ($usemem) {
             $memcache_server = 'localhost';
             $memcache_port = '11211';
 
-            $memcache = new \Memcache;
+            $memcache = new \Memcached;
             $memcache->addServer($memcache_server, $memcache_port);
 
             return $memcache;
