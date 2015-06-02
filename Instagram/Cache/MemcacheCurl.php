@@ -30,7 +30,7 @@ class MemcacheCurl {
                 $response = $memlink;
             } else {
                 $response = $this->executeCurl($curl_resource);
-                $memcache->replace($key, $response, false, $ttl) || $memcache->set($key, $response, false, $ttl);
+                $memcache->replace($key, $response, $ttl) || $memcache->set($key, $response, $ttl);
             }
         }
         return $response;
