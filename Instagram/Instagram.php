@@ -112,7 +112,7 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
      * @throws \Instagram\ApiException
      */
     public function getUserByUsername( $username ) {
-        $user = $this->searchUsers( $username, array( 'count' => 1 ) )->getItem( 0 );
+        $user = $this->searchUsers( $username )->getItem( 0 );
         if ( $user ) {
             try {
                 return $this->getUser( $user->getId() );
