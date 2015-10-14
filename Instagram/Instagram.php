@@ -107,12 +107,24 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
      * Retrieve a user given their username
      *
      * @param string $username Username of the user to retrieve
+     * @param array $params
      * @return \Instagram\User
      * @access public
-     * @throws \Instagram\ApiException
+     * @return User|mixed
+     * @throws Core\ApiException
      */
-    public function getUserByUsername( $username ) {
-        $user = $this->searchUsers( $username, array( 'count' => 1 ) )->getItem( 0 );
+    public function getUserByUsername( $username, $params ) {
+        $users = $this->searchUsers( $username, $params );
+        foreach ($users as $get_user) {
+            if ($get_user->username == $username) {
+                $user = $get_user;
+            }
+        }
+
+        if(!isset($user)) {
+            $user = $users->getItem( 0 );
+        }
+
         if ( $user ) {
             try {
                 return $this->getUser( $user->getId() );
