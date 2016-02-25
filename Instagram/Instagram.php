@@ -77,6 +77,17 @@ class Instagram extends \Instagram\Core\BaseObjectAbstract {
     }
 
     /**
+     * Set use cache or not
+     *
+     * @param bool $bool
+     * @access public
+     */
+    public function useCache( $bool = true ) {
+        $this->proxy->useCache( $bool );
+    }
+
+
+    /**
      * Logout
      *
      * This doesn't actually work yet, waiting for Instagram to implement it in their API

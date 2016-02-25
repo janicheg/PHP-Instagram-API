@@ -107,6 +107,16 @@ class Proxy {
     }
 
     /**
+     * Set use cache or not
+     *
+     * @param $bool
+     * @access public
+     */
+    public function useCache($bool) {
+        $this->client->use_cache = $bool;
+    }
+
+    /**
      * Set the client ID
      *
      * @param string $client_id the client ID

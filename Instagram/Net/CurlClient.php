@@ -25,6 +25,7 @@ class CurlClient implements ClientInterface {
     protected $config = null;
     protected $header = null;
     protected $client_secret = null;
+    public $use_cache = true;
     /**
      * Constructor
      *
@@ -132,7 +133,7 @@ class CurlClient implements ClientInterface {
      * @throws \Instagram\Core\ApiException
      */
     protected function fetch($is_get = false) {
-        if($is_get){
+        if($is_get and $this->use_cache){
             $memcache_curl = new MemcacheCurl();
             $raw_response = $memcache_curl->getResponse($this->curl, $this->header);
         } else {
