@@ -10,6 +10,9 @@ namespace Instagram\Cache;
 
 
 class MemcacheCurl {
+
+    protected $code;
+
     // Call get_link to return a string with a new link
     public function getResponse($curl_resource, $header) {
         $memcache = $this->getMemcache();
@@ -30,7 +33,9 @@ class MemcacheCurl {
                 $response = $memlink;
             } else {
                 $response = $this->executeCurl($curl_resource);
-                $memcache->replace($key, $response, $ttl) || $memcache->set($key, $response, $ttl);
+                if ($this->code !== 429) {
+                    $memcache->replace($key, $response, $ttl) || $memcache->set($key, $response, $ttl);
+                }
             }
         }
         return $response;
@@ -39,6 +44,7 @@ class MemcacheCurl {
     private function executeCurl($curl_resource)
     {
         $raw_response = curl_exec($curl_resource);
+        $this->code  = curl_getinfo ($curl_resource, CURLINFO_HTTP_CODE);
         $error = curl_error( $curl_resource );
         if ( $error ) {
             throw new \Instagram\Core\ApiException( $error, 666, 'CurlError' );
