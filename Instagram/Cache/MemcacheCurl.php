@@ -33,7 +33,7 @@ class MemcacheCurl {
                 $response = $memlink;
             } else {
                 $response = $this->executeCurl($curl_resource);
-                if ($this->code !== 429) {
+                if (preg_match('/^.*OAuthRateLimitException.*$/',$response) !== 1) {
                     $memcache->replace($key, $response, $ttl) || $memcache->set($key, $response, $ttl);
                 }
             }
