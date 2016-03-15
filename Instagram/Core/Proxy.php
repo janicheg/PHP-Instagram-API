@@ -169,6 +169,21 @@ class Proxy {
     public function getLocationMedia( $id, array $params = null ) {
         return $this->getObjectMedia( 'Locations', $id, $params );
     }
+    
+    /**
+    * Get media by shortcode
+    * 
+    * @param string $shortcode Media shortcode
+    * @return StdClass Returns the media data
+    * @access public
+    */
+    public function getMediaByShortcode( $id ) {
+    	$response = $this->apiCall(
+    		'get',
+    		sprintf( '%s/media/shortcode/%s', $this->api_url, $id )
+    	);
+    	return $response->getData();
+    }
 
     /**
      * Get tag media
